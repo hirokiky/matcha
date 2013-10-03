@@ -1,4 +1,8 @@
+import os
 from setuptools import setup, find_packages
+
+here = os.path.abspath(os.path.dirname(__file__))
+README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
     name='matcha',
@@ -9,6 +13,7 @@ setup(
     author='hirokiky',
     author_email='hirokiky@gmail.com',
     description='A WSGI dispatcher.',
+    long_discription=README,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
