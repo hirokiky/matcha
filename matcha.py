@@ -27,10 +27,10 @@ class Matching(object):
         path_info = environ['PATH_INFO']
         script_name = environ['SCRIPT_NAME']
 
-        matched_case, matched_dict = self['path_info']
+        matched_case, matched_dict = self[path_info]
 
         environ['PATH_INFO'] = ''
-        environ['SCRIPT_NAME'] = script_name + path_info
+        environ['SCRIPT_NAME'] = script_name.rstrip('/') + '/' + path_info.lstrip('/')
 
         return matched_case, matched_dict
 
