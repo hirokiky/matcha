@@ -7,13 +7,14 @@ README = open(os.path.join(here, 'README.rst')).read()
 setup(
     name='matcha',
     version='0.0',
-    packages=find_packages(),
+    #packages=find_packages(),
+    py_modules=['matcha'],
     url='https://github.com/hirokiky/matcha',
     license='MIT',
     author='hirokiky',
     author_email='hirokiky@gmail.com',
     description='A WSGI dispatcher.',
-    long_discription=README,
+    long_description=README,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
