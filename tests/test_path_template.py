@@ -32,3 +32,9 @@ def test_add(target_class):
     actual = target_left + target_right
 
     assert actual.pattern == '/mio/ritsu'
+
+
+def test_repr(target_class):
+    target = target_class('/ritsu')
+
+    assert repr(target) == "<matcha.PathTemplate pattern:'/ritsu'>"

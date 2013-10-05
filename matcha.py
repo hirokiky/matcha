@@ -95,6 +95,9 @@ class PathTemplate(object):
     def __add__(self, other):
         return self.__class__(join_paths(self.pattern, other.pattern))
 
+    def __repr__(self):
+        return "<matcha.PathTemplate pattern:'{0}'>".format(self.pattern)
+
 
 def join_paths(left_path, right_path):
     return left_path.rstrip('/') + '/' + right_path.lstrip('/')
