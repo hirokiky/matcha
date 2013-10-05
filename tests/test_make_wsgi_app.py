@@ -12,13 +12,14 @@ def dummy_case(environ, start_response):
 
 
 def dummy_matching(environ):
-    return dummy_case
+    return dummy_case, 'dummy_matched_dict'
 
 
 def test_make_wsgi_app(target):
     inner_target = target(dummy_matching)
 
-    actual = inner_target('dummy_environ', 'dummy_start_response')
+    dummy_environ = {}
+    actual = inner_target(dummy_environ, 'dummy_start_response')
 
-    assert actual[0] == 'dummy_environ'
-    assert actual[1] == 'dummy_start_response'
+    assert dummy_environ['matcha.matched_dict'] == 'dummy_matched_dict'
+    assert actual == (dummy_environ, 'dummy_start_response')
