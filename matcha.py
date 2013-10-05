@@ -120,3 +120,13 @@ def include(pattern, matching, name=''):
         ) for child_path_template, case, child_name in matching.matching_records
     ]
     return matching
+
+
+def make_wsgi_app(matching):
+    """ Making a WSGI application from Matching object
+    registered other WSGI applications on each 'case' argument.
+    """
+    def wsgi_app(environ, start_response):
+        case = matching(environ)
+        return case(environ, start_response)
+    return wsgi_app
