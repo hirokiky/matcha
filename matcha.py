@@ -11,7 +11,7 @@ class NotReversed(Exception):
     """
 
 
-MatchingRecord = namedtuple('MatchingRecord', 'pattern_template case name')
+MatchingRecord = namedtuple('MatchingRecord', 'path_template case name')
 
 
 class Matching(object):
@@ -19,7 +19,7 @@ class Matching(object):
         if matching_records:
             self.matching_records = matching_records
         else:
-            self.matching_records = [MatchingRecord(PatternTemplate(pattern), case, (name,))]
+            self.matching_records = [MatchingRecord(PathTemplate(pattern), case, (name,))]
 
     def __call__(self, environ):
         """ Getting environ and return a matched case and a URL kwargs.
@@ -38,7 +38,7 @@ class Matching(object):
         """ Getting a PATH_INFO and return a matched case and a URL kwargs
         """
         for record in self.matching_records:
-            matched_dict = record.pattern_template(path_info)
+            matched_dict = record.path_template(path_info)
             if matched_dict is None:
                 continue
             else:
@@ -59,18 +59,18 @@ class Matching(object):
         """
         for record in self.matching_records:
             if record.name == args:
-                pattern_template = record.pattern_template
+                path_template = record.path_template
                 break
         else:
             raise NotReversed
         try:
-            url = pattern_template.pattern.format(**kwargs)
+            url = path_template.pattern.format(**kwargs)
         except KeyError:
             raise NotReversed
         return url
 
 
-class PatternTemplate(object):
+class PathTemplate(object):
     def __init__(self, pattern):
         self.pattern = pattern
 
