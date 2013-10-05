@@ -30,7 +30,7 @@ class Matching(object):
         matched_case, matched_dict = self[path_info]
 
         environ['PATH_INFO'] = ''
-        environ['SCRIPT_NAME'] = script_name.rstrip('/') + '/' + path_info.lstrip('/')
+        environ['SCRIPT_NAME'] = join_paths(script_name, path_info)
 
         return matched_case, matched_dict
 
@@ -93,7 +93,11 @@ class PathTemplate(object):
         return matched_dict
 
     def __add__(self, other):
-        return self.__class__(self.pattern + other.pattern)
+        return self.__class__(join_paths(self.pattern, other.pattern))
+
+
+def join_paths(left_path, right_path):
+    return left_path.rstrip('/') + '/' + right_path.lstrip('/')
 
 
 def bundle(*addable):
