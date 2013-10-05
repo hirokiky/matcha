@@ -6,8 +6,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
     name='matcha',
-    version='0.0',
-    #packages=find_packages(),
+    version='0.1',
     py_modules=['matcha'],
     url='https://github.com/hirokiky/matcha',
     license='MIT',
