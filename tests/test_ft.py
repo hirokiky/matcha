@@ -28,3 +28,9 @@ def test_ft(target):
     resp = target.get('/about/')
     assert resp.status == '200 Ok'
     assert b"Ho-Kago Tea Time is a" in resp.body
+
+
+def test_not_matched(target):
+    resp = target.get('/kadoom/', status=404)
+    assert resp.status == '404 Not Found'
+    assert b"Requested URL was not found on " in resp.body

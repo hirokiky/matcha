@@ -125,13 +125,22 @@ def include(pattern, matching, name=''):
     return matching
 
 
-def make_wsgi_app(matching):
+def matcha_not_found_app(environ, start_response):
+    start_response('404 Not Found', [('content-type', 'text/plain')])
+    return [b'Requested URL was not found on this server.']
+
+
+def make_wsgi_app(matching, not_found_app=matcha_not_found_app):
     """ Making a WSGI application from Matching object
     registered other WSGI applications on each 'case' argument.
     """
     def wsgi_app(environ, start_response):
-        matched_case, matched_dict = matching(environ)
         environ['matcha.matching'] = matching
-        environ['matcha.matched_dict'] = matched_dict
-        return matched_case(environ, start_response)
+        try:
+            matched_case, matched_dict = matching(environ)
+        except NotMatched:
+            return not_found_app(environ, start_response)
+        else:
+            environ['matcha.matched_dict'] = matched_dict
+            return matched_case(environ, start_response)
     return wsgi_app
