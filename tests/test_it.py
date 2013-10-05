@@ -11,7 +11,7 @@ member_pages = bundle(
     m('/{member}/', 'member_detail', 'detail'),
 )
 
-dispatcher = bundle(
+matching = bundle(
     m('/', 'home', 'home'),
     include('/about/', about_pages, 'about'),
     include('/member/', member_pages, 'member'),
@@ -19,7 +19,7 @@ dispatcher = bundle(
 
 
 def test_it():
-    assert dispatcher['/'] == ('home', {})
-    assert dispatcher['/about/htt/'] == ('htt', {})
-    assert dispatcher['/member/'] == ('member_list', {})
-    assert dispatcher['/member/ritsu/'] == ('member_detail', {'member': 'ritsu'})
+    assert matching['/'] == ('home', {})
+    assert matching['/about/htt/'] == ('htt', {})
+    assert matching['/member/'] == ('member_list', {})
+    assert matching['/member/ritsu/'] == ('member_detail', {'member': 'ritsu'})
