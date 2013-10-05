@@ -131,6 +131,7 @@ def make_wsgi_app(matching):
     """
     def wsgi_app(environ, start_response):
         matched_case, matched_dict = matching(environ)
+        environ['matcha.matching'] = matching
         environ['matcha.matched_dict'] = matched_dict
         return matched_case(environ, start_response)
     return wsgi_app

@@ -22,4 +22,5 @@ def test_make_wsgi_app(target):
     actual = inner_target(dummy_environ, 'dummy_start_response')
 
     assert dummy_environ['matcha.matched_dict'] == 'dummy_matched_dict'
+    assert dummy_environ['matcha.matching'] == dummy_matching
     assert actual == (dummy_environ, 'dummy_start_response')
