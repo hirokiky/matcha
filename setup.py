@@ -23,5 +23,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: WSGI',
     ],
-    tests_require=['pytest'],
+    tests_require=['pytest', 'webtest'],
 )
