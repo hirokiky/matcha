@@ -109,7 +109,10 @@ def include(pattern, matching, name=''):
     """ Including a other matching, to get as matching pattern's child paths.
     """
     matching.matching_records = [
-        MatchingRecord(pattern + pattern, case, (name,) + child_name)
-        for child_pattern, case, child_name in matching.matching_records
+        MatchingRecord(
+            PathTemplate(pattern + child_path_template.pattern),
+            case,
+            (name,) + child_name
+        ) for child_path_template, case, child_name in matching.matching_records
     ]
     return matching
