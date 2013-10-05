@@ -117,7 +117,7 @@ def include(pattern, matching, name=''):
     """
     matching.matching_records = [
         MatchingRecord(
-            PathTemplate(pattern + child_path_template.pattern),
+            PathTemplate(pattern) + child_path_template,
             case,
             (name,) + child_name
         ) for child_path_template, case, child_name in matching.matching_records
