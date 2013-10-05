@@ -96,13 +96,13 @@ class PathTemplate(object):
         return self.__class__(self.pattern + other.pattern)
 
 
-def dispatcher(*matchings):
-    """ Getting Matching objects and composing them to one Matching object.
+def bundle(*addable):
+    """ Getting addable objects (such as Matching) and composing them to one.
     When nothing is provided, this will raise a ValueError
     """
-    if len(matchings) <= 0:
+    if len(addable) <= 0:
         raise ValueError('Provide at least one Matching object')
-    return sum(matchings[1:], matchings[0])
+    return sum(addable[1:], addable[0])
 
 
 def include(pattern, matching, name=''):

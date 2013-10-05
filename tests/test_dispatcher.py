@@ -3,8 +3,8 @@ import pytest
 
 @pytest.fixture
 def target():
-    from matcha import dispatcher
-    return dispatcher
+    from matcha import bundle
+    return bundle
 
 
 def test_without_args(target):
