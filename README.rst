@@ -198,7 +198,7 @@ can take any objects you like, not only WSGI app.
     
 For instance, you can register strings and use this as signature
 for some views. something like **route_name** on
-`Pyramid <http://www.pylonsproject.org/`>_.
+`Pyramid <http://www.pylonsproject.org/>`_.
 
 Adding matchings
 ----------------
