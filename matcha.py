@@ -27,26 +27,30 @@ class Matching(object):
         path_info = environ['PATH_INFO']
         script_name = environ['SCRIPT_NAME']
 
-        matched_case, matched_dict = self[path_info]
+        record, path_matched = self._scanning_matching_records(path_info)
 
-        environ['PATH_INFO'] = ''
-        environ['SCRIPT_NAME'] = join_paths(script_name, path_info)
+        extra_index = len(''.join(path_info.split('/')[:path_matched.matched_index])) + path_matched.matched_index - 1
+        environ['PATH_INFO'] = path_info[extra_index:]
+        environ['SCRIPT_NAME'] = join_paths(script_name, path_info[:extra_index])
 
-        return matched_case, matched_dict
+        return record.case, path_matched.matched_dict
 
     def __getitem__(self, path_info):
         """ Getting a PATH_INFO and return a matched case and a URL kwargs
         """
+        record, path_matched = self._scanning_matching_records(path_info)
+        return record.case, path_matched.matched_dict
+
+    def _scanning_matching_records(self, path_info):
         for record in self.matching_records:
-            matched_dict = record.path_template(path_info)
-            if matched_dict is None:
+            path_matched = record.path_template(path_info)
+            if path_matched is None:
                 continue
             else:
                 break
         else:
             raise NotMatched
-
-        return record.case, matched_dict
+        return record, path_matched
 
     def __add__(self, other):
         """ Receiving a other Matching object and composing matching_records
@@ -63,11 +67,25 @@ class Matching(object):
                 break
         else:
             raise NotReversed
+        if path_template.pattern.split('/')[-1].startswith('*'):
+            wildcard_name = path_template.pattern.split('/')[-1][1:]
+            l = kwargs.get(wildcard_name)
+            if not l:
+                raise NotReversed
+            additional_path = '/'.join(l)
+            extra_path_elements = path_template.pattern.split('/')[:-1]
+            pattern = join_paths('/'.join(extra_path_elements), additional_path)
+        else:
+            pattern = path_template.pattern
+
         try:
-            url = path_template.pattern.format(**kwargs)
+            url = pattern.format(**kwargs)
         except KeyError:
             raise NotReversed
         return url
+
+
+PathMatched = namedtuple('PathMatched', 'matched_index matched_dict')
 
 
 class PathTemplate(object):
@@ -78,10 +96,21 @@ class PathTemplate(object):
         pattern_elements = self.pattern.split('/')
         path_elements = path_info.split('/')
 
+        matched_dict = {}
+
+        if pattern_elements[-1].startswith('*'):
+            matched_index = len(pattern_elements) - 1
+
+            wildcdard_name = pattern_elements[-1][1:]
+            matched_dict[wildcdard_name] = path_elements[matched_index:]
+
+            path_elements = path_elements[:matched_index]
+            pattern_elements = pattern_elements[:-1]
+        else:
+            matched_index = len(path_elements)
+
         if len(pattern_elements) != len(path_elements):
             return None
-
-        matched_dict = {}
 
         for patt, path in zip(pattern_elements, path_elements):
             if patt.startswith('{') and patt.endswith('}'):
@@ -90,7 +119,7 @@ class PathTemplate(object):
             elif patt != path:
                 return None
 
-        return matched_dict
+        return PathMatched(matched_index, matched_dict)
 
     def __add__(self, other):
         return self.__class__(join_paths(self.pattern, other.pattern))
