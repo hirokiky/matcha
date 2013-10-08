@@ -38,9 +38,9 @@ create WSGI application.
 
 Now, accessing from your browser:
 
-* http://127.0.0.1:800/ => home_app will be called
-* http://127.0.0.1:800/post/ => post_list_app will be called
-* http://127.0.0.1:800/post/some_slug/ => post_detail_app will be called
+* http://127.0.0.1:8000/ => home_app will be called
+* http://127.0.0.1:8000/post/ => post_list_app will be called
+* http://127.0.0.1:8000/post/some_slug/ => post_detail_app will be called
 
 URL arguments
 =============
