@@ -98,7 +98,6 @@ def test_call_with_wildcard(target_class):
     assert environ['SCRIPT_NAME'] == '/htt/members'
 
 
-
 def test_add(target_class):
     target1 = target_class(matching_records=['ritsu'])
     target2 = target_class(matching_records=['mio'])
