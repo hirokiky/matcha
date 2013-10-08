@@ -29,7 +29,11 @@ class Matching(object):
 
         record, path_matched = self._scanning_matching_records(path_info)
 
-        extra_index = len(''.join(path_info.split('/')[:path_matched.matched_index])) + path_matched.matched_index - 1
+        try:
+            extra_index = index_repeatedly(path_info, '/', path_matched.matched_index)
+        except ValueError:
+            extra_index = len(path_info)
+
         environ['PATH_INFO'] = path_info[extra_index:]
         environ['SCRIPT_NAME'] = join_paths(script_name, path_info[:extra_index])
 
@@ -67,9 +71,9 @@ class Matching(object):
                 break
         else:
             raise NotReversed
-        if path_template.pattern.split('/')[-1].startswith('*'):
-            wildcard_name = path_template.pattern.split('/')[-1][1:]
-            l = kwargs.get(wildcard_name)
+
+        if path_template.wildcard_name:
+            l = kwargs.get(path_template.wildcard_name)
             if not l:
                 raise NotReversed
             additional_path = '/'.join(l)
@@ -92,18 +96,21 @@ class PathTemplate(object):
     def __init__(self, pattern):
         self.pattern = pattern
 
+        last_pattern_element = self.pattern.split('/')[-1]
+        if last_pattern_element.startswith('*'):
+            self.wildcard_name = last_pattern_element[1:]
+        else:
+            self.wildcard_name = None
+
     def __call__(self, path_info):
         pattern_elements = self.pattern.split('/')
         path_elements = path_info.split('/')
 
         matched_dict = {}
 
-        if pattern_elements[-1].startswith('*'):
+        if self.wildcard_name:
             matched_index = len(pattern_elements) - 1
-
-            wildcdard_name = pattern_elements[-1][1:]
-            matched_dict[wildcdard_name] = path_elements[matched_index:]
-
+            matched_dict[self.wildcard_name] = path_elements[matched_index:]
             path_elements = path_elements[:matched_index]
             pattern_elements = pattern_elements[:-1]
         else:
@@ -130,6 +137,14 @@ class PathTemplate(object):
 
 def join_paths(left_path, right_path):
     return left_path.rstrip('/') + '/' + right_path.lstrip('/')
+
+
+def index_repeatedly(s, sub, times):
+    i = -1
+    for _ in range(times):
+        i += 1
+        i = s.index(sub, i)
+    return i
 
 
 def bundle(*addable):
