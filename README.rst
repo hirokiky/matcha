@@ -59,6 +59,43 @@ you can get **'hello_world'** string as URL arguments like this:
    >>> environ['matcha.matched_dict']
    {'post_slug': 'hello_world'}
 
+Wildcard
+=========
+If the last element in pattern starts with '*',
+the following string is considered as `wildcard_name`.
+And correspond path will always match.
+
+.. code-block:: python
+
+   >>> matching = bundle(
+       m('/', home_app, 'home'),
+       m('/docs/*doc_tree', document_app, 'docs')
+   )
+
+And then, you can access them:
+
+* http://127.0.0.1:8000/ => home_app
+* http://127.0.0.1:8000/docs => document_app
+* http://127.0.0.1:8000/docs/about => document_app
+* http://127.0.0.1:8000/docs/about/contributing => document_app
+
+After /docs/ it will match any cases.
+
+And getting the argument.
+
+.. code-block:: python
+
+   >>> # In document_app, when accessed by '/docs/about/contributing'
+   >>> environ['matcha.mathed_dict']
+   {'doc_tree', ['about', 'contributing']}
+   >>> environ['PATH_INFO']
+   '/about/contributing'
+   >>> environ['SCRIPT_NAME']
+   '/docs'
+
+You can also use this implementation to call another WSGI application
+such as dispatching again by using the left PATH_INFO
+
 Reversing
 =========
 Web pages usually contains some URLs for a another page.
