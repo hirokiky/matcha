@@ -3,19 +3,19 @@ from matcha import include, bundle
 
 
 about_pages = bundle(
-    m('/htt/', 'htt', 'htt'),
-    m('/activity/*activity', 'activity', 'activity')
+    m('/htt/', 'htt', 'about_htt'),
+    m('/activity/*activity', 'activity', 'about_activity')
 )
 
 member_pages = bundle(
-    m('/', 'member_list', 'list'),
-    m('/{member}/', 'member_detail', 'detail'),
+    m('/', 'member_list', 'member_list'),
+    m('/{member}/', 'member_detail', 'member_detail'),
 )
 
 matching = bundle(
     m('/', 'home', 'home'),
-    include('/about/', about_pages, 'about'),
-    include('/member/', member_pages, 'member'),
+    include('/about/', about_pages),
+    include('/member/', member_pages),
 )
 
 

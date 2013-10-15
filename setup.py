@@ -7,7 +7,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 setup(
     name='matcha',
-    version='0.2',
+    version='0.3',
     py_modules=['matcha'],
     url='https://github.com/hirokiky/matcha',
     license='MIT',

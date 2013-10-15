@@ -1,6 +1,15 @@
 Changes
 ===========
 
+0.3
+-----
+
+Un-supporting name argument on include function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Before this change, user applied include name,
+the reversing in included app will break, because
+the name for reversing already changed.
+
 0.2
 -----
 * Supporting Wildcard

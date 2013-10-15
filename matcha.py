@@ -19,7 +19,7 @@ class Matching(object):
         if matching_records:
             self.matching_records = matching_records
         else:
-            self.matching_records = [MatchingRecord(PathTemplate(pattern), case, (name,))]
+            self.matching_records = [MatchingRecord(PathTemplate(pattern), case, name)]
 
     def __call__(self, environ):
         """ Getting environ and return a matched case and a URL kwargs.
@@ -62,11 +62,11 @@ class Matching(object):
         composed_matching_records = self.matching_records + other.matching_records
         return self.__class__(matching_records=composed_matching_records)
 
-    def reverse(self, *args, **kwargs):
+    def reverse(self, matching_name, **kwargs):
         """ Getting a matching name and URL args and return a corresponded URL
         """
         for record in self.matching_records:
-            if record.name == args:
+            if record.name == matching_name:
                 path_template = record.path_template
                 break
         else:
@@ -156,14 +156,14 @@ def bundle(*addable):
     return sum(addable[1:], addable[0])
 
 
-def include(pattern, matching, name=''):
+def include(pattern, matching):
     """ Including a other matching, to get as matching pattern's child paths.
     """
     matching.matching_records = [
         MatchingRecord(
             PathTemplate(pattern) + child_path_template,
             case,
-            (name,) + child_name
+            child_name
         ) for child_path_template, case, child_name in matching.matching_records
     ]
     return matching

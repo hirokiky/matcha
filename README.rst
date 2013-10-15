@@ -111,7 +111,7 @@ Let's take URL to post_detail application. You can do like this:
    >>> matching.reverse('post_detail', post_slug='about_matcha')
    '/post/about_matcha/'
 
-* The positional argument is a signature string for applications.
+* The first positional argument is a signature string for applications.
   It provided as the third argument of each Matching's constructors.
 * The keyword argument is a string to fill up the URL arguments.
 * Careflly, reverse method will raise NotReverced exception when
@@ -135,8 +135,8 @@ from core matching.
 
 
    matching = bundle(
-       m('/', post_list_app, 'list'),
-       m('/{post_slug}/', post_detail_app, 'detail'),
+       m('/', post_list_app, 'post_list'),
+       m('/{post_slug}/', post_detail_app, 'post_detail'),
    )
 
 And then, applying this to core by using *include* function:
@@ -148,7 +148,7 @@ And then, applying this to core by using *include* function:
     >>>
     >>> matching = bundle(
     ...     m('/', home_app, 'home'),
-    ...     include('/post/', blog_matching, 'post')
+    ...     include('/post/', blog_matching)
     ... )
 
 Matching paths will be like this:
@@ -160,11 +160,13 @@ Matching paths will be like this:
 By using *include*, you can separate paths based on each applications
 and avoid repeating of descriptions (such as '/post/').
 
-In this case, reverisng to childs will be like this:
+Name for reverisng to childs are not affected in any way.
+This value should be unique, even in the all of matchings
+(fixed in matcha 0.3):
 
 .. code-block:: python
 
-    >>> matching.reverse('post', 'detail', post_slug='some_slug')
+    >>> matching.reverse('post_detail', post_slug='some_slug')
     '/post/some_slug/'
 
 Setting your 404 WSGI application
